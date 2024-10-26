@@ -1,0 +1,9 @@
+{
+  "ticker": "SAVE",
+  "type": "BUY",
+  "volume": 100,
+  "price": {
+    "value": 100,
+    "currency": "SEK"
+  }
+}
