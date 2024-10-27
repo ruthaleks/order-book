@@ -142,7 +142,7 @@ public class OrderTest {
                 .andExpect(status().isCreated());
 
         MvcResult result = mvc.perform(MockMvcRequestBuilders
-                        .get("/order/summary/SAVE?date=" + date)
+                        .get("/summary/SAVE?date=" + date)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andReturn();
@@ -176,20 +176,20 @@ public class OrderTest {
                 .andExpect(status().isCreated());
 
         mvc.perform(MockMvcRequestBuilders
-                        .get("/order/summary/SAVE?date=1994-04-08")
+                        .get("/summary/SAVE?date=1994-04-08")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound())
                 .andReturn();
 
         mvc.perform(MockMvcRequestBuilders
-                        .get("/order/summary/GME?date=" + date)
+                        .get("/summary/GME?date=" + date)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound())
                 .andReturn();
 
 
         MvcResult result = mvc.perform(MockMvcRequestBuilders
-                        .get("/order/summary/TSLA?date=" + date)
+                        .get("/summary/TSLA?date=" + date)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andReturn();

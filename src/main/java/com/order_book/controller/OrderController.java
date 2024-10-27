@@ -69,7 +69,7 @@ public class OrderController {
 
             }
     )
-    @GetMapping("/order/summary/{ticker}")
+    @GetMapping("/summary/{ticker}")
     public ResponseEntity<SummaryResponse> getOrder(@PathVariable Ticker ticker,
                                                     @Parameter(description = "Order date in format YYYY-MM-DD", example = "2024-10-27")
                                                     @RequestParam(value = "date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
