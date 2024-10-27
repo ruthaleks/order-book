@@ -1,11 +1,8 @@
 package com.order_book;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.order_book.controller.Amount;
-import com.order_book.controller.OrderResponse;
-import com.order_book.controller.Ticker;
-import com.order_book.controller.Type;
-import com.order_book.repository.Order;
+import com.order_book.controller.*;
+import com.order_book.model.Order;
 import com.order_book.repository.OrderRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -20,6 +17,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.LocalDate;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -42,13 +40,15 @@ public class OrderTest {
         orderRepository.flush();
     }
 
+
     @Test
     public void createOrder() throws Exception {
         String body = Files.readString(Path.of("src/test/resources/create_order_test.json"));
 
-        MvcResult result = mvc.perform(MockMvcRequestBuilders.post("/order")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(body))
+        MvcResult result = mvc.perform(MockMvcRequestBuilders
+                .post("/order")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(body))
                 .andExpect(status().isCreated())
                 .andReturn();
 
@@ -68,22 +68,37 @@ public class OrderTest {
     }
 
     @Test
+    public void createZeroPriceOrder() throws Exception {
+        String body = Files.readString(Path.of("src/test/resources/create_invalid_price_order_test.json"));
+
+        mvc.perform(MockMvcRequestBuilders
+                .post("/order")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(body))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void createInvalidTickerOrder() throws Exception {
+        String body = Files.readString(Path.of("src/test/resources/create_invalid_ticker_order_test.json"));
+
+        mvc.perform(MockMvcRequestBuilders
+                        .post("/order")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(body))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
     public void getOrder() throws Exception {
         String body = Files.readString(Path.of("src/test/resources/create_order_test.json"));
 
-        MvcResult postResult = mvc.perform(MockMvcRequestBuilders.post("/order")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(body))
-                .andExpect(status().isCreated())
-                .andReturn();
+        MvcResult postResult = mvc.perform(MockMvcRequestBuilders.post("/order").contentType(MediaType.APPLICATION_JSON).content(body)).andExpect(status().isCreated()).andReturn();
 
         String location = postResult.getResponse().getHeader("Location");
         assertThat(location).isNotNull();
 
-        MvcResult getResult = mvc.perform(MockMvcRequestBuilders.get(location)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andReturn();
+        MvcResult getResult = mvc.perform(MockMvcRequestBuilders.get(location).contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk()).andReturn();
 
         String responseBody = getResult.getResponse().getContentAsString();
 
@@ -98,13 +113,95 @@ public class OrderTest {
 
     @Test
     public void getNonExistingOrder() throws Exception {
-        mvc.perform(MockMvcRequestBuilders.get("/order/999999999")
+        mvc.perform(MockMvcRequestBuilders
+                        .get("/order/999999999")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());
 
-        mvc.perform(MockMvcRequestBuilders.get("/order/intentional404")
+        mvc.perform(MockMvcRequestBuilders
+                        .get("/order/intentional404")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());
     }
+
+    @Test
+    public void getSummary() throws Exception {
+        String firstOrder = Files.readString(Path.of("src/test/resources/create_order_test.json"));
+        String secondOrder = Files.readString(Path.of("src/test/resources/create_another_order_test.json"));
+        String date = LocalDate.now().toString();
+
+        mvc.perform(MockMvcRequestBuilders
+                        .post("/order")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(firstOrder))
+                .andExpect(status().isCreated());
+        mvc.perform(MockMvcRequestBuilders
+                        .post("/order")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(secondOrder))
+                .andExpect(status().isCreated());
+
+        MvcResult result = mvc.perform(MockMvcRequestBuilders
+                        .get("/order/summary/SAVE?date=" + date)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        String responseBody = result.getResponse().getContentAsString();
+        SummaryResponse summary = objectMapper.readValue(responseBody, SummaryResponse.class);
+
+        assertThat(summary.getMin()).isEqualTo(10);
+        assertThat(summary.getMax()).isEqualTo(101);
+        assertThat(summary.getAvg()).isEqualTo(55.5);
+        assertThat(summary.getNumberOrders()).isEqualTo(2);
+    }
+
+    @Test
+    public void getSummaryForCorrectTickerAndDate() throws Exception {
+        String firstOrder = Files.readString(Path.of("src/test/resources/create_order_test.json"));
+        String secondOrder = Files.readString(Path.of("src/test/resources/create_another_tsla_order_test.json"));
+
+        String date = LocalDate.now().toString();
+
+        mvc.perform(MockMvcRequestBuilders
+                        .post("/order")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(firstOrder))
+                .andExpect(status().isCreated());
+
+        mvc.perform(MockMvcRequestBuilders
+                        .post("/order")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(secondOrder))
+                .andExpect(status().isCreated());
+
+        mvc.perform(MockMvcRequestBuilders
+                        .get("/order/summary/SAVE?date=1994-04-08")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound())
+                .andReturn();
+
+        mvc.perform(MockMvcRequestBuilders
+                        .get("/order/summary/GME?date=" + date)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound())
+                .andReturn();
+
+
+        MvcResult result = mvc.perform(MockMvcRequestBuilders
+                        .get("/order/summary/TSLA?date=" + date)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        String responseBody = result.getResponse().getContentAsString();
+        SummaryResponse summary = objectMapper.readValue(responseBody, SummaryResponse.class);
+
+        assertThat(summary.getMin()).isEqualTo(10);
+        assertThat(summary.getMax()).isEqualTo(10);
+        assertThat(summary.getAvg()).isEqualTo(10);
+        assertThat(summary.getNumberOrders()).isEqualTo(1);
+    }
+
 }
 

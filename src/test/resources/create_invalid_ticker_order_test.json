@@ -1,0 +1,9 @@
+{
+  "ticker": "INVALID",
+  "type": "BUY",
+  "volume": 100,
+  "price": {
+    "value": 123,
+    "currency": "SEK"
+  }
+}
