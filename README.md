@@ -1,5 +1,10 @@
 # Getting Started
 
+## Build
+````bash
+./mvnw clean install
+````
+
 ## Start the database
 ````bash
 docker-compose up -d
@@ -12,7 +17,7 @@ docker-compose up -d
 ## UI and API specs 
 Navigate into http://localhost:8080/swagger-ui/index.html
 
-## Run the all tests
+## Run all tests
 ````bash
 ./mvnw test
 ````
