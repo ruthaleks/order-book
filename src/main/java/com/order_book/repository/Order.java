@@ -1,17 +1,15 @@
 package com.order_book.repository;
 
 import com.order_book.controller.CreateOrderRequest;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import lombok.AllArgsConstructor;
+import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
-@AllArgsConstructor
 @Entity
-public class BookOrder {
+@Table(name = "orders")
+@NoArgsConstructor(force = true)
+public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -21,7 +19,7 @@ public class BookOrder {
     final private int priceValue;
     final private String priceCurrency;
 
-    public BookOrder(CreateOrderRequest request) {
+    public Order(CreateOrderRequest request) {
         this.ticker = request.getTicker().toString();
         this.type = request.getType().toString();
         this.volume = request.getVolume();
