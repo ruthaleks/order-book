@@ -13,7 +13,6 @@ import java.time.LocalDate;
 @Table(name = "orders")
 @NoArgsConstructor()
 public class Order {
-    // todo: required args and positive amounts
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
