@@ -3,7 +3,7 @@
   "type": "BUY",
   "volume": 100,
   "price": {
-    "value": 100,
+    "value": 101,
     "currency": "SEK"
   }
 }

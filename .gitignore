@@ -26,6 +26,3 @@ replay_pid*
 
 # intellij
 .idea
-
-# SQLite
-*.sqlite

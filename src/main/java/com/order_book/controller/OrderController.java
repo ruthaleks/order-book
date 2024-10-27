@@ -1,16 +1,17 @@
 package com.order_book.controller;
 
-import com.order_book.repository.BookOrder;
+import com.order_book.repository.Order;
 import com.order_book.service.OrderService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+import java.net.URI;
 
 @RestController
 public class OrderController {
@@ -24,9 +25,29 @@ public class OrderController {
             }
     )
     @PostMapping("/order")
-    public ResponseEntity<HttpStatus> createOrder(@RequestBody CreateOrderRequest request) {
-        orderService.saveOrder(new BookOrder(request));
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+    public ResponseEntity<Void> createOrder(@RequestBody CreateOrderRequest request) {
+        Long id = orderService.saveOrder(new Order(request));
+        URI uri = ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(id)
+                .toUri();
+        return ResponseEntity.created(uri).build();
     }
 
+    @Operation(
+            summary = "Get a order by ID",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Order successfully retrieved.",
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = OrderResponse.class))),
+                    @ApiResponse(responseCode = "404", description = "Order not found.",
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))
+
+            }
+    )
+    @GetMapping("/order/{id}")
+    public ResponseEntity<OrderResponse> getOrder(@PathVariable Long id) {
+        Order order = orderService.getOrder(id);
+        return ResponseEntity.ok(new OrderResponse(order));
+    }
 }
