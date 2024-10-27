@@ -1,6 +1,6 @@
 package com.order_book.controller;
 
-import com.order_book.repository.Order;
+import com.order_book.model.Order;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.Getter;
@@ -9,13 +9,13 @@ import lombok.NoArgsConstructor;
 @Getter
 @Schema(description = "Order details")
 @Data
-@NoArgsConstructor(force = true)
+@NoArgsConstructor
 public class OrderResponse {
-    final private Ticker ticker;
-    final private Type type;
+    private Ticker ticker;
+    private Type type;
     @Schema(description = "Number of stocks", example = "100")
-    final private int volume;
-    final private Amount price;
+    private int volume;
+    private Amount price;
 
     public OrderResponse(Order order) {
         this.ticker = Ticker.valueOf(order.getTicker());

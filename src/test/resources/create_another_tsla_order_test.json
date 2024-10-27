@@ -1,0 +1,9 @@
+{
+  "ticker": "TSLA",
+  "type": "BUY",
+  "volume": 50,
+  "price": {
+    "value": 10,
+    "currency": "SEK"
+  }
+}
