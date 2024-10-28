@@ -1,15 +1,13 @@
 # Getting Started
 
-## Build
-````bash
-./mvnw clean install
-````
-
 ## Start the database
 ````bash
 docker-compose up -d
 ````
-
+## Build
+````bash
+./mvnw clean install
+````
 ## Build and start server
 ````bash
 ./mvnw spring-boot:run
