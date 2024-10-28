@@ -1,5 +1,6 @@
 package com.order_book.service;
 
+import com.order_book.common.Ticker;
 import com.order_book.model.Order;
 import com.order_book.model.Summary;
 import com.order_book.repository.OrderRepository;
@@ -25,7 +26,7 @@ public class OrderService {
         return orderRepository.getById(id);
     }
 
-    public Summary getSummary(String ticker, LocalDate date) {
+    public Summary getSummary(Ticker ticker, LocalDate date) {
         List<Order> orders = orderRepository.findByTickerAndOrderDate(ticker, date);
 
         if (orders.isEmpty()) {

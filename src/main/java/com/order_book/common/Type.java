@@ -1,4 +1,4 @@
-package com.order_book.controller;
+package com.order_book.common;
 
 public enum Type {
     BUY,

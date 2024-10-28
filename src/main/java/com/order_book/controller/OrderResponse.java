@@ -1,5 +1,7 @@
 package com.order_book.controller;
 
+import com.order_book.common.Ticker;
+import com.order_book.common.Type;
 import com.order_book.model.Order;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
@@ -18,8 +20,8 @@ public class OrderResponse {
     private Amount price;
 
     public OrderResponse(Order order) {
-        this.ticker = Ticker.valueOf(order.getTicker());
-        this.type = Type.valueOf(order.getType());
+        this.ticker = order.getTicker();
+        this.type = order.getType();
         this.volume = order.getVolume();
         this.price = new Amount(order.getPriceValue(), Amount.Currency.valueOf(order.getPriceCurrency()));
     }
