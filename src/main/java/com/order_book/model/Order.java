@@ -8,7 +8,7 @@ import jakarta.validation.constraints.Positive;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Getter
 @Entity
@@ -39,7 +39,7 @@ public class Order {
     private String priceCurrency;
 
     @Column(nullable = false)
-    private LocalDate orderDate;
+    private LocalDateTime createdAt;
 
     public Order(CreateOrderRequest request) {
         this.ticker = request.getTicker();
@@ -47,7 +47,7 @@ public class Order {
         this.volume = request.getVolume();
         this.priceValue = request.getPrice().getValue();
         this.priceCurrency = request.getPrice().getCurrency().toString();
-        this.orderDate = LocalDate.now();
+        this.createdAt = LocalDateTime.now();
     }
 
 }
