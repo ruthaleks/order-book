@@ -1,6 +1,8 @@
 package com.order_book;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.order_book.common.Ticker;
+import com.order_book.common.Type;
 import com.order_book.controller.*;
 import com.order_book.model.Order;
 import com.order_book.repository.OrderRepository;
@@ -60,8 +62,8 @@ public class OrderTest {
         Order savedOrder = orderRepository.findById(orderId).orElse(null);
         assertThat(savedOrder).isNotNull();
 
-        assertThat(savedOrder.getTicker()).isEqualTo("SAVE");
-        assertThat(savedOrder.getType()).isEqualTo("BUY");
+        assertThat(savedOrder.getTicker()).isEqualTo(Ticker.SAVE);
+        assertThat(savedOrder.getType()).isEqualTo(Type.BUY);
         assertThat(savedOrder.getVolume()).isEqualTo(100);
         assertThat(savedOrder.getPriceValue()).isEqualTo(101);
         assertThat(savedOrder.getPriceCurrency()).isEqualTo("SEK");
