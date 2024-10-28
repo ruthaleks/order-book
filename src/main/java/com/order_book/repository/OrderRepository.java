@@ -11,4 +11,6 @@ import java.util.List;
 @Repository
 public interface OrderRepository extends JpaRepository<Order, Long> {
     List<Order> findByTickerAndOrderDate(Ticker ticker, LocalDate orderDate);
+    List<Order> findByTicker(Ticker ticker);
+
 }

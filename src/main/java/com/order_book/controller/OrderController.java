@@ -72,7 +72,7 @@ public class OrderController {
     )
     @GetMapping("/summary/{ticker}")
     public ResponseEntity<SummaryResponse> getOrder(@PathVariable Ticker ticker,
-                                                    @Parameter(description = "YYYY-MM-DD", example = "2024-10-27")
+                                                    @Parameter(description = "YYYY-MM-DD", example = "2024-10-27", required = false)
                                                     @RequestParam(value = "date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
         Summary summary = orderService.getSummary(ticker, date);
         return ResponseEntity.ok(new SummaryResponse(summary));
