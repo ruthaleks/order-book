@@ -67,6 +67,7 @@ public class OrderTest {
         assertThat(savedOrder.getVolume()).isEqualTo(100);
         assertThat(savedOrder.getPriceValue()).isEqualTo(101);
         assertThat(savedOrder.getPriceCurrency()).isEqualTo("SEK");
+        assertThat(savedOrder.getCreatedAt()).isNotNull();
     }
 
     @Test
