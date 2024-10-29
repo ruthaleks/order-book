@@ -17,12 +17,7 @@ public class Amount {
     final private Currency currency;
 
     public enum Currency {
-        SEK,
-        USD,
-        EUR,
-        GBP,
-        NOK,
-        DKK
+        SEK
     }
 }
 
