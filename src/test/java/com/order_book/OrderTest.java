@@ -158,6 +158,37 @@ public class OrderTest {
         assertThat(summary.getNumberOrders()).isEqualTo(2);
     }
 
+    public void getSummaryNoDate() throws Exception {
+        String firstOrder = Files.readString(Path.of("src/test/resources/create_order_test.json"));
+        String secondOrder = Files.readString(Path.of("src/test/resources/create_another_order_test.json"));
+        String date = LocalDate.now().toString();
+
+        mvc.perform(MockMvcRequestBuilders
+                        .post("/order")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(firstOrder))
+                .andExpect(status().isCreated());
+        mvc.perform(MockMvcRequestBuilders
+                        .post("/order")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(secondOrder))
+                .andExpect(status().isCreated());
+
+        MvcResult result = mvc.perform(MockMvcRequestBuilders
+                        .get("/summary/SAVE")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        String responseBody = result.getResponse().getContentAsString();
+        SummaryResponse summary = objectMapper.readValue(responseBody, SummaryResponse.class);
+
+        assertThat(summary.getMin()).isEqualTo(10);
+        assertThat(summary.getMax()).isEqualTo(101);
+        assertThat(summary.getAvg()).isEqualTo(55.5);
+        assertThat(summary.getNumberOrders()).isEqualTo(2);
+    }
+
     @Test
     public void getSummaryForCorrectTickerAndDate() throws Exception {
         String firstOrder = Files.readString(Path.of("src/test/resources/create_order_test.json"));
