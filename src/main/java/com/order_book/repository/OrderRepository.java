@@ -13,9 +13,9 @@ import java.util.List;
 @Repository
 public interface OrderRepository extends JpaRepository<Order, Long> {
     @Query("SELECT o FROM Order o WHERE o.ticker= :ticker AND o.createdAt >= :startOfDay AND o.createdAt < :endOfDay")
-    List<Order> findByTickerAndOrderDate(@Param("ticker") Ticker ticker,
-                                         @Param("startOfDay") LocalDateTime startOfDay,
-                                         @Param("endOfDay") LocalDateTime endOfDay);
+    List<Order> findByTickerAndDate(@Param("ticker") Ticker ticker,
+                                    @Param("startOfDay") LocalDateTime startOfDay,
+                                    @Param("endOfDay") LocalDateTime endOfDay);
     List<Order> findByTicker(Ticker ticker);
 
 }

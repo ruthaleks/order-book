@@ -29,7 +29,7 @@ public class OrderService {
     public Summary getSummary(Ticker ticker, LocalDate date) {
         List<Order> orders = (date == null)
                 ? orderRepository.findByTicker(ticker)
-                : orderRepository.findByTickerAndOrderDate(ticker, date);
+                : orderRepository.findByTickerAndDate(ticker, date.atStartOfDay(), date.plusDays(1).atStartOfDay());
 
         if (orders.isEmpty()) {
             throw new EntityNotFoundException("Could not find any orders for given ticker and date");
