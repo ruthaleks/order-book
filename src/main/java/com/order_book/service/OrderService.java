@@ -39,8 +39,8 @@ public class OrderService {
                 () -> new IllegalStateException("Failed to calculate min price for ticker: " + ticker));
         int max = orders.stream().mapToInt(Order::getPriceValue).max().orElseThrow(
                 () -> new IllegalStateException("Failed to calculate max price for ticker: " + ticker));
-        Double average = orders.stream().mapToInt(Order::getPriceValue).average().orElseThrow(
-                () -> new IllegalStateException("Failed to calculate average price for ticker: " + ticker));
+        int totalVolume = orders.stream().mapToInt(Order::getVolume).sum();
+        Double average = orders.stream().mapToDouble(order -> order.getPriceValue() * order.getVolume()).sum() / totalVolume;
         return new Summary(average, min, max, orders.size());
     }
 }

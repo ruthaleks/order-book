@@ -154,7 +154,7 @@ public class OrderTest {
 
         assertThat(summary.getMin()).isEqualTo(10);
         assertThat(summary.getMax()).isEqualTo(101);
-        assertThat(summary.getAvg()).isEqualTo(55.5);
+        assertThat(summary.getAvg()).isEqualTo(70.66666666666667);
         assertThat(summary.getNumberOrders()).isEqualTo(2);
     }
 
