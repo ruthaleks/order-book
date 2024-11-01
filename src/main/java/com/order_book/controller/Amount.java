@@ -1,5 +1,6 @@
 package com.order_book.controller;
 
+import com.order_book.common.Currency;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 
@@ -15,9 +16,5 @@ public class Amount {
     @Positive(message = "The order amount must be positive and non-zero")
     final private int value;
     final private Currency currency;
-
-    public enum Currency {
-        SEK
-    }
 }
 

@@ -1,6 +1,7 @@
 package com.order_book;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.order_book.common.Currency;
 import com.order_book.common.Ticker;
 import com.order_book.common.Type;
 import com.order_book.controller.*;
@@ -66,7 +67,7 @@ public class OrderTest {
         assertThat(savedOrder.getType()).isEqualTo(Type.BUY);
         assertThat(savedOrder.getVolume()).isEqualTo(100);
         assertThat(savedOrder.getPriceValue()).isEqualTo(101);
-        assertThat(savedOrder.getPriceCurrency()).isEqualTo("SEK");
+        assertThat(savedOrder.getPriceCurrency()).isEqualTo(Currency.SEK);
         assertThat(savedOrder.getCreatedAt()).isNotNull();
     }
 
@@ -111,7 +112,7 @@ public class OrderTest {
         assertThat(order.getType()).isEqualTo(Type.BUY);
         assertThat(order.getVolume()).isEqualTo(100);
         assertThat(order.getPrice().getValue()).isEqualTo(101);
-        assertThat(order.getPrice().getCurrency()).isEqualTo(Amount.Currency.SEK);
+        assertThat(order.getPrice().getCurrency()).isEqualTo(Currency.SEK);
     }
 
     @Test
