@@ -1,6 +1,8 @@
 package com.order_book.service;
 
+import com.order_book.common.Currency;
 import com.order_book.common.Ticker;
+import com.order_book.common.Type;
 import com.order_book.model.Order;
 import com.order_book.model.Summary;
 import com.order_book.repository.OrderRepository;
@@ -17,7 +19,8 @@ public class OrderService {
     @Autowired
     private OrderRepository orderRepository;
 
-    public Long saveOrder(Order order) {
+    public Long saveOrder(Ticker ticker, Type type, int volume, int priceValue, Currency priceCurrency) {
+        Order order = new Order(ticker, type, volume, priceValue, priceCurrency);
         orderRepository.save(order);
         return order.getId();
     }

@@ -34,7 +34,13 @@ public class OrderController {
     )
     @PostMapping("/order")
     public ResponseEntity<Void> createOrder(@Valid @RequestBody CreateOrderRequest request) {
-        Long id = orderService.saveOrder(new Order(request));
+        Long id = orderService.saveOrder(
+                request.getTicker(),
+                request.getType(),
+                request.getVolume(),
+                request.getPrice().getValue(),
+                request.getPrice().getCurrency()
+        );
         URI uri = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("/{id}")

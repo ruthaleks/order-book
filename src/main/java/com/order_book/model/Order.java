@@ -1,8 +1,8 @@
 package com.order_book.model;
 
+import com.order_book.common.Currency;
 import com.order_book.common.Ticker;
 import com.order_book.common.Type;
-import com.order_book.controller.CreateOrderRequest;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Positive;
 import lombok.Getter;
@@ -36,17 +36,18 @@ public class Order {
     private int priceValue;
 
     @Column(nullable = false)
-    private String priceCurrency;
+    @Enumerated(EnumType.STRING)
+    private Currency priceCurrency;
 
     @Column(nullable = false)
     private LocalDateTime createdAt;
 
-    public Order(CreateOrderRequest request) {
-        this.ticker = request.getTicker();
-        this.type = request.getType();
-        this.volume = request.getVolume();
-        this.priceValue = request.getPrice().getValue();
-        this.priceCurrency = request.getPrice().getCurrency().toString();
+    public Order(Ticker ticker, Type type, int volume, int priceValue, Currency priceCurrency) {
+        this.ticker = ticker;
+        this.type = type;
+        this.volume = volume;
+        this.priceValue = priceValue;
+        this.priceCurrency = priceCurrency;
         this.createdAt = LocalDateTime.now();
     }
 

@@ -23,6 +23,6 @@ public class OrderResponse {
         this.ticker = order.getTicker();
         this.type = order.getType();
         this.volume = order.getVolume();
-        this.price = new Amount(order.getPriceValue(), Amount.Currency.valueOf(order.getPriceCurrency()));
+        this.price = new Amount(order.getPriceValue(), order.getPriceCurrency());
     }
 }
